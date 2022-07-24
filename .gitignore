@@ -1,6 +1,7 @@
 .idea/
 vendor/
 tests
+index.php
 composer.lock
 http-client.env.json
 paypal.http
