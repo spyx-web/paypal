@@ -1,0 +1,23 @@
+{
+    "name": "szwtdl/paypal",
+    "description": "paypal",
+    "keywords": ["paypal","payment"],
+    "type": "library",
+    "require": {
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "7.4.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Szwtdl\\Paypal\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "szwtdl",
+            "email": "szpengjian@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}

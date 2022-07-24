@@ -1,0 +1,6 @@
+.idea/
+vendor/
+tests
+composer.lock
+http-client.env.json
+paypal.http
