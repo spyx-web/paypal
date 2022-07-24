@@ -8,17 +8,17 @@
 try {
     $client = new HttpClient('client_id', 'client_key');
     $product = new ProductList();
-    $product->setParams([[
+    $product->setParams([
         'headers' => [
             'Authorization' => 'Bearer ' . $client->getAccessToken(),
-            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
         ],
         'query' => [
-            'page_size' => 20,
-            'page' => 1,
+            'page_size' => '20',
+            'page' => '1',
             'total_required' => 'true'
         ],
-    ]]);
+    ]);
     $result = $client->execute($product)->getBody()->getContents();
     dd($result);
 } catch (\Exception $exception) {

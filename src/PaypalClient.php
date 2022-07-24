@@ -5,7 +5,7 @@ namespace Szwtdl\Paypal;
 use GuzzleHttp\Client;
 use Szwtdl\Paypal\Request\AccessToken;
 
-class HttpClient
+class PaypalClient
 {
     protected Client $client;
     protected string $client_id;
@@ -23,7 +23,7 @@ class HttpClient
         $this->client_id = $client_id;
         $this->client_key = $client_key;
         $this->mode = $mode;
-        $this->client = new Client(['base_uri' => $this->url[$this->mode], 'timeout' => 3.0]);
+        $this->client = new Client(['base_uri' => $this->url[$this->mode], 'timeout' => 5.0]);
     }
 
     /**
