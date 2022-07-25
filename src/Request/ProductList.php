@@ -9,12 +9,5 @@ class ProductList extends HttpRequest implements RequestInterface
 {
     protected string $method = 'GET';
     protected string $path = 'v1/catalogs/products';
-    /**
-     * @param array $params
-     */
-    public function setParams(array $params): void
-    {
-        $this->params = $this->params + $params;
-    }
 
 }
