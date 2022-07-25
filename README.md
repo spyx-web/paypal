@@ -6,7 +6,7 @@
 
 ```php
 try {
-    $client = new HttpClient('client_id', 'client_key');
+    $client = new PaypalClient('client_id', 'client_key');
     $product = new ProductList();
     $product->setParams([
         'headers' => [
