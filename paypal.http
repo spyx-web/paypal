@@ -1,0 +1,481 @@
+### paypal token
+POST https://{{host}}/v1/oauth2/token
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+
+### 产品列表
+GET https://{{ host }}/v1/catalogs/products?page_size=20&page=1&total_required=true
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+### 创建产品
+POST https://{{ host }}/v1/catalogs/products
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+PayPal-Request-Id: PRODUCT-18062020-001
+
+{
+  "name": "我是新222增产品",
+  "description": "我是描述",
+  "type": "SERVICE",
+  "category": "SOFTWARE",
+  "image_url": "https://example.com/streaming.jpg",
+  "home_url": "https://example.com/home"
+}
+
+### 更新产品
+
+PATCH https://{{ host }}/v1/catalogs/products/PROD-60596544C0782344A
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+[
+  {
+    "op": "replace",
+    "path": "/home_url",
+    "value": "https://spyx.com"
+  },
+  {
+    "op": "replace",
+    "path": "/description",
+    "value": "Premium video streaming service"
+  }
+]
+
+### 产品详情
+GET https://{{ host }}/v1/catalogs/products/PROD-60596544C0782344A
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+
+
+### 订单创建
+POST https://{{ host }}/v2/checkout/orders
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "intent": "CAPTURE",
+  "purchase_units": [
+    {
+      "amount": {
+        "currency_code": "USD",
+        "value": "100.00"
+      }
+    }
+  ]
+}
+
+### 订单更新
+PATCH https://{{ host }}/v2/checkout/orders/2YW58531LG196334G
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+[
+  {
+    "op": "replace",
+    "path": "/purchase_units/@reference_id=='PUHF'/shipping/address",
+    "value": {
+      "address_line_1": "123 Townsend St",
+      "address_line_2": "Floor 6",
+      "admin_area_2": "San Francisco",
+      "admin_area_1": "CA",
+      "postal_code": "94107",
+      "country_code": "US"
+    }
+  }
+]
+
+### 显示订单详情
+GET https://{{ host }}/v2/checkout/orders/2YW58531LG196334G
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+### 确认订单
+POST https://{{ host }}/v2/checkout/orders/2YW58531LG196334G/confirm-payment-source
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "payment_source": {
+    "card": {
+      "number": "4111111111111111",
+      "expiry": "2020-02",
+      "name": "John Doe",
+      "billing_address": {
+        "address_line_1": "2211 N First Street",
+        "address_line_2": "Building 17",
+        "admin_area_2": "San Jose",
+        "admin_area_1": "CA",
+        "postal_code": "95131",
+        "country_code": "US"
+      }
+    }
+  }
+}
+
+### 授权订单付款
+POST https://{{ host }}/v2/checkout/orders/2YW58531LG196334G/authorize
+Authorization: Bearer {{access_token}}
+PayPal-Request-Id: 7b92603e-77ed-4896-8e78-5dea2050476a
+Content-Type: application/json
+
+
+### 获取订单付款
+POST https://{{ host }}/v2/checkout/orders/2YW58531LG196334G/capture
+Authorization: Bearer {{access_token}}
+PayPal-Request-Id: 7b92603e-77ed-4896-8e78-5dea2050476a
+Content-Type: application/json
+
+
+### 订阅清单计划（单个产品订阅列表）
+
+GET https://{{ host }}/v1/billing/plans?product_id=PROD-60596544C0782344A&page_size=20&page=1&total_required=true
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+### 创建计划 (P-78V0336983392504UMLNY34A)
+POST https://{{ host }}/v1/billing/plans
+Authorization: Bearer {{access_token}}
+PayPal-Request-Id: PLAN-18062019-001
+Content-Type: application/json
+
+{
+  "product_id": "PROD-60596544C0782344A",
+  "name": "Video Streaming Service Plan",
+  "description": "Video Streaming Service basic plan",
+  "status": "ACTIVE",
+  "billing_cycles": [
+    {
+      "frequency": {
+        "interval_unit": "MONTH",
+        "interval_count": 1
+      },
+      "tenure_type": "TRIAL",
+      "sequence": 1,
+      "total_cycles": 2,
+      "pricing_scheme": {
+        "fixed_price": {
+          "value": "3",
+          "currency_code": "USD"
+        }
+      }
+    },
+    {
+      "frequency": {
+        "interval_unit": "MONTH",
+        "interval_count": 1
+      },
+      "tenure_type": "TRIAL",
+      "sequence": 2,
+      "total_cycles": 3,
+      "pricing_scheme": {
+        "fixed_price": {
+          "value": "6",
+          "currency_code": "USD"
+        }
+      }
+    },
+    {
+      "frequency": {
+        "interval_unit": "MONTH",
+        "interval_count": 1
+      },
+      "tenure_type": "REGULAR",
+      "sequence": 3,
+      "total_cycles": 12,
+      "pricing_scheme": {
+        "fixed_price": {
+          "value": "10",
+          "currency_code": "USD"
+        }
+      }
+    }
+  ],
+  "payment_preferences": {
+    "auto_bill_outstanding": true,
+    "setup_fee": {
+      "value": "10",
+      "currency_code": "USD"
+    },
+    "setup_fee_failure_action": "CONTINUE",
+    "payment_failure_threshold": 3
+  },
+  "taxes": {
+    "percentage": "10",
+    "inclusive": false
+  }
+}
+
+### 更新计划
+
+PATCH https://{{ host }}/v1/billing/plans/P-78V0336983392504UMLNY34A
+Authorization: Bearer {{ access_token }}
+Content-Type: application/json
+
+[
+  {
+    "op": "replace",
+    "path": "/payment_preferences/payment_failure_threshold",
+    "value": 7
+  }
+]
+
+### 显示计划详情
+
+GET https://{{ host }}/v1/billing/plans/P-78V0336983392504UMLNY34A
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+
+### 更新计划价格
+POST https://{{host}}/v1/billing/plans/P-78V0336983392504UMLNY34A/update-pricing-schemes
+Authorization: Bearer {{ access_token }}
+Content-Type: application/json
+
+{
+  "pricing_schemes": [
+    {
+      "billing_cycle_sequence": 1,
+      "pricing_scheme": {
+        "fixed_price": {
+          "value": "50",
+          "currency_code": "USD"
+        },
+        "roll_out_strategy": {
+          "effective_time": "2019-02-10T21:20:49Z",
+          "process_change_from": "NEXT_PAYMENT"
+        }
+      }
+    },
+    {
+      "billing_cycle_sequence": 2,
+      "pricing_scheme": {
+        "fixed_price": {
+          "value": "100",
+          "currency_code": "USD"
+        },
+        "pricing_model": "VOLUME",
+        "tiers": [
+          {
+            "starting_quantity": "1",
+            "ending_quantity": "1000",
+            "amount": {
+              "value": "150",
+              "currency_code": "USD"
+            }
+          },
+          {
+            "starting_quantity": "1001",
+            "amount": {
+              "value": "250",
+              "currency_code": "USD"
+            }
+          }
+        ],
+        "roll_out_strategy": {
+          "effective_time": "2019-02-10T21:20:49Z",
+          "process_change_from": "NEXT_PAYMENT"
+        }
+      }
+    }
+  ]
+}
+
+### 创建订阅
+POST https://{{host}}/v1/billing/subscriptions
+Authorization: Bearer {{access_token}}
+PayPal-Request-Id: SUBSCRIPTION-21092019-001
+Content-Type: application/json
+
+{
+  "plan_id": "P-78V0336983392504UMLNY34A",
+  "start_time": "2022-07-24T00:00:00Z",
+  "quantity": "20",
+  "shipping_amount": {
+    "currency_code": "USD",
+    "value": "10.00"
+  },
+  "subscriber": {
+    "name": {
+      "given_name": "John",
+      "surname": "Doe"
+    },
+    "email_address": "customer@example.com",
+    "shipping_address": {
+      "name": {
+        "full_name": "John Doe"
+      },
+      "address": {
+        "address_line_1": "2211 N First Street",
+        "address_line_2": "Building 17",
+        "admin_area_2": "San Jose",
+        "admin_area_1": "CA",
+        "postal_code": "95131",
+        "country_code": "US"
+      }
+    }
+  },
+  "application_context": {
+    "brand_name": "walmart",
+    "locale": "en-US",
+    "shipping_preference": "SET_PROVIDED_ADDRESS",
+    "user_action": "SUBSCRIBE_NOW",
+    "payment_method": {
+      "payer_selected": "PAYPAL",
+      "payee_preferred": "IMMEDIATE_PAYMENT_REQUIRED"
+    },
+    "return_url": "https://example.com/returnUrl",
+    "cancel_url": "https://example.com/cancelUrl"
+  }
+}
+
+### 更新订阅 (修改单用户订阅的价格)
+
+PATCH https://{{host}}/v1/billing/subscriptions/I-BW452GLLEP1G
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+[
+  {
+    "op": "replace",
+    "path": "/plan/billing_cycles/@sequence==1/pricing_scheme/fixed_price",
+    "value": {
+      "currency_code": "USD",
+      "value": "50.00"
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/plan/billing_cycles/@sequence==2/pricing_scheme/tiers",
+    "value": [
+      {
+        "starting_quantity": "1",
+        "ending_quantity": "1000",
+        "amount": {
+          "value": "500",
+          "currency_code": "USD"
+        }
+      },
+      {
+        "starting_quantity": "1001",
+        "amount": {
+          "value": "2000",
+          "currency_code": "USD"
+        }
+      }
+    ]
+  },
+  {
+    "op": "replace",
+    "path": "/plan/payment_preferences/auto_bill_outstanding",
+    "value": true
+  },
+  {
+    "op": "replace",
+    "path": "/plan/payment_preferences/payment_failure_threshold",
+    "value": 1
+  },
+  {
+    "op": "replace",
+    "path": "/plan/taxes/percentage",
+    "value": "10"
+  }
+]
+
+### 显示订阅详情
+GET https://{{host}}/v1/billing/subscriptions/I-BW452GLLEP1G
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+### 激活订阅
+POST https://{{host}}/v1/billing/subscriptions/I-BW452GLLEP1G/activate
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "reason": "Reactivating the subscription"
+}
+
+### 取消订阅
+POST https://{{host}}/v1/billing/subscriptions/I-BW452GLLEP1G/capture
+Authorization: Bearer {{access_token}}
+PayPal-Request-Id: CAPTURE-160919-A0051
+Content-Type: application/json
+
+{
+  "note": "Charging as the balance reached the limit",
+  "capture_type": "OUTSTANDING_BALANCE",
+  "amount": {
+    "currency_code": "USD",
+    "value": "100"
+  }
+}
+
+### 修改订阅计划或数量
+POST https://{{host}}/v1/billing/subscriptions/I-BW452GLLEP1G/revise
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "plan_id": "P-5ML4271244454362WXNWU5NQ",
+  "shipping_amount": {
+    "currency_code": "USD",
+    "value": "10.00"
+  },
+  "shipping_address": {
+    "name": {
+      "full_name": "John Doe"
+    },
+    "address": {
+      "address_line_1": "2211 N First Street",
+      "address_line_2": "Building 17",
+      "admin_area_2": "San Jose",
+      "admin_area_1": "CA",
+      "postal_code": "95131",
+      "country_code": "US"
+    }
+  },
+  "application_context": {
+    "brand_name": "walmart",
+    "locale": "en-US",
+    "shipping_preference": "SET_PROVIDED_ADDRESS",
+    "payment_method": {
+      "payer_selected": "PAYPAL",
+      "payee_preferred": "IMMEDIATE_PAYMENT_REQUIRED"
+    },
+    "return_url": "https://example.com/returnUrl",
+    "cancel_url": "https://example.com/cancelUrl"
+  }
+}
+
+### 暂停订阅
+POST https://{{host}}/v1/billing/subscriptions/I-BW452GLLEP1G/suspend
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "reason": "Item out of stock"
+}
+
+### 列出订阅的交易
+GET https://{{host}}/v1/billing/subscriptions/I-BW452GLLEP1G/transactions?start_time=2022-07-01T07:50:20.940Z&end_time=2022-09-01T07:50:20.940Z
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+
+### 列出交易
+
+GET https://{{host}}/v1/reporting/transactions?start_date=2014-07-01T00:00:00-0700&end_date=2014-07-30T23:59:59-0700&transaction_id=5TY05013RG002845M&fields=all&page_size=100&page=1
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+
+### 列出余额
+GET https://{{host}}/v1/reporting/balances?currency_code=ALL&as_of_time=2022-05-22T00:00:00-0700&include_crypto_currencies=true
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+

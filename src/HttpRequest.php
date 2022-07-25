@@ -6,9 +6,6 @@ abstract class HttpRequest
 {
     protected string $method = 'POST';
     protected array $params = [];
-    protected array $header = [
-        'Accept' => 'application/json',
-    ];
     protected string $access_token;
     protected string $path;
 
@@ -58,22 +55,6 @@ abstract class HttpRequest
     public function getParams(): array
     {
         return $this->params;
-    }
-
-    /**
-     * @param array $header
-     */
-    public function setHeader(array $header): void
-    {
-        $this->header = array_merge_recursive($this->header, $header);
-    }
-
-    /**
-     * @return array
-     */
-    public function getHeader(): array
-    {
-        return $this->header;
     }
 
     /**

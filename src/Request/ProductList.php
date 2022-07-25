@@ -9,14 +9,6 @@ class ProductList extends HttpRequest implements RequestInterface
 {
     protected string $method = 'GET';
     protected string $path = 'v1/catalogs/products';
-    protected array $params = [
-        'query' => [
-            'page_size' => '20',
-            'page' => '1',
-            'total_required' => 'true'
-        ],
-    ];
-
     /**
      * @param array $params
      */
