@@ -3,7 +3,10 @@
   "description": "paypal",
   "keywords": [
     "paypal",
-    "payment"
+    "payment",
+    "gateway",
+    "pay",
+    "laravel"
   ],
   "type": "library",
   "require": {
