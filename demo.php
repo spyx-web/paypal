@@ -16,6 +16,8 @@ try {
             'Content-Type' => 'application/json',
         ],
     ]);
+
+
 //    $product = new \Szwtdl\Paypal\Request\ProductDetail('PROD-5JM733700L217413N');
 //    $product->setParams([
 //        'headers' => [

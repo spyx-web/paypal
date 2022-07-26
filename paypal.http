@@ -143,9 +143,9 @@ PayPal-Request-Id: PLAN-18062019-001
 Content-Type: application/json
 
 {
-  "product_id": "PROD-60596544C0782344A",
-  "name": "Video Streaming Service Plan",
-  "description": "Video Streaming Service basic plan",
+  "product_id": "PROD-05556099RH5629943",
+  "name": "一个月订阅",
+  "description": "一个月订阅 plan",
   "status": "ACTIVE",
   "billing_cycles": [
     {
@@ -386,7 +386,7 @@ Content-Type: application/json
 ]
 
 ### 显示订阅详情
-GET https://{{host}}/v1/billing/subscriptions/I-BW452GLLEP1G
+GET https://{{host}}/v1/billing/subscriptions/I-4NJ6LYFMS4PF
 Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
@@ -399,8 +399,8 @@ Content-Type: application/json
   "reason": "Reactivating the subscription"
 }
 
-### 取消订阅
-POST https://{{host}}/v1/billing/subscriptions/I-BW452GLLEP1G/capture
+### 获取订阅的授权付款
+POST https://{{host}}/v1/billing/subscriptions/I-4NJ6LYFMS4PF/capture
 Authorization: Bearer {{access_token}}
 PayPal-Request-Id: CAPTURE-160919-A0051
 Content-Type: application/json
@@ -410,7 +410,7 @@ Content-Type: application/json
   "capture_type": "OUTSTANDING_BALANCE",
   "amount": {
     "currency_code": "USD",
-    "value": "100"
+    "value": "29"
   }
 }
 
