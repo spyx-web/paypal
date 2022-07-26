@@ -1,5 +1,7 @@
 .idea/
 vendor/
 tests
-index.php
+demo.php
+http-client.env.json
+paypal.http
 composer.lock
