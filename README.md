@@ -73,3 +73,11 @@ try {
   "home_url": "https://example.com/home"
 }'
 ```
+
+### 打印测试结果
+
+```bash
+ 
+    ./vendor/bin/phpunit --colors=always  tests/ProductTest.php
+
+```

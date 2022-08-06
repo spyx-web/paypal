@@ -2,6 +2,8 @@
 
 namespace Szwtdl\Paypal;
 
+use Szwtdl\Paypal\Exceptions\HttpException;
+use Szwtdl\Paypal\Exceptions\InvalidArgumentException;
 use Szwtdl\Paypal\Request\ProductCreate;
 use Szwtdl\Paypal\Request\ProductDetail;
 use Szwtdl\Paypal\Request\ProductList;
@@ -19,6 +21,9 @@ class Paypal implements PaypalInterface
 
     public function ProductCreate($name, $description, $type, $category, $image_url, $home_url)
     {
+        if (empty($name) || empty($description) || empty($type) || empty($category) || empty($image_url) || empty($home_url)) {
+            throw new InvalidArgumentException("Invalid name description type category image_url home_url");
+        }
         try {
             $product = new ProductCreate();
             $product->setParams([
@@ -38,15 +43,13 @@ class Paypal implements PaypalInterface
             ]);
             return json_decode($this->client->execute($product)->getBody()->getContents(), true);
         } catch (\Exception $exception) {
-            throw new \Exception("请求异常:" . $exception->getMessage());
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
     public function ProductList($offset, $limit)
     {
-        if (empty($offset) || empty($limit)) {
-            throw new \Exception("参数错误");
-        }
+        if (is_numeric($offset) || is_numeric($limit)) throw new InvalidArgumentException("Invalid offset limit");
         try {
             $product = new ProductList();
             $product->setParams([
@@ -66,12 +69,13 @@ class Paypal implements PaypalInterface
                 'list' => $res['products']
             ];
         } catch (\Exception $exception) {
-            throw new \Exception("请求异常:" . $exception->getMessage());
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
     public function ProductDetail($product_id)
     {
+        if (empty($product_id)) throw new InvalidArgumentException("Invalid product_id not null");
         try {
             $product = new ProductDetail($product_id);
             $product->setParams([
@@ -82,12 +86,13 @@ class Paypal implements PaypalInterface
             ]);
             return json_decode($this->client->execute($product)->getBody()->getContents(), true);
         } catch (\Exception $exception) {
-            throw new \Exception("请求异常:" . $exception->getMessage());
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
-    public function ProductUpdate($product_id, array $data)
+    public function ProductUpdate($product_id, $data)
     {
+        if (empty($product_id) || !is_array($data)) throw new InvalidArgumentException("Invalid product_id null or data not array");
         try {
             $product = new ProductUpdate($product_id);
             $params = [
@@ -106,7 +111,7 @@ class Paypal implements PaypalInterface
             $product->setParams($params);
             return $this->client->execute($product)->getStatusCode() == 204 ? 'success' : 'error';
         } catch (\Exception $exception) {
-            throw new \Exception("请求异常:" . $exception->getMessage());
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
