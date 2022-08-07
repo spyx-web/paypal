@@ -27,7 +27,7 @@ use Szwtdl\Paypal\Request\SubscriptionsUpdate;
 
 class Paypal implements PaypalInterface
 {
-    protected PaypalClient $client;
+    protected $client;
 
     public function __construct($client_id, $client_key, $mode = 'prod')
     {
