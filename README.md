@@ -110,3 +110,4 @@ curl -v -X PATCH https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-47X
   }
 ]'
 ```
+composer config repositories.paypal path ../paypal
