@@ -1,6 +1,5 @@
 .idea/
 vendor/
-tests
 demo.php
 http-client.env.json
 paypal.http
