@@ -22,4 +22,4 @@ jobs:
       - name: Install dependencies
         run: composer install
       - name: PHPUnit check
-        run: ./vendor/bin/phpunit --coverage-text tests/ProductTest.php
+        run: ./vendor/bin/phpunit --coverage-text
