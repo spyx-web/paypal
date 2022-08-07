@@ -6,7 +6,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 try {
     $paypal = new Paypal('AQHcKDQueGSoG0-3ZpzSMbAu8DBuJOYe6qbyU-oERc_dVPi04af0_YWv_oSSBGZNJ28x2amjtQDky5k4', 'EBZNdZU5ngG9_GdOuTp1plKLOLzkfrtd4XvZkJJ6Zia5ZBu7Gy-lPDcqGjFvc5kcI2fWX78dh7Gg9oF2', 'dev');
-//    $result = $paypal->ProductList(1, 5);
+    $result = $paypal->ProductList("1", "2");
 //    $result = $paypal->ProductCreate("每天订购", "每天sand", 'SERVICE', 'SOFTWARE', 'https://example.com/streaming.jpg', 'https://example.com/home');
 //    $result = $paypal->ProductDetail("PROD-8RU94658131561729");
 //    $result = $paypal->ProductUpdate("PROD-8RU94658131561729", [
@@ -76,15 +76,15 @@ try {
 //    $result = $paypal->SubscriptionActivate('I-47XX49DWVE2W', [
 //        'reason' => 'Reactivating the subscription'
 //    ]);
-    $result = $paypal->SubscriptionUpdate('I-FFV9L1EEFHCH', [
-        'plan/billing_cycles/@sequence==1/pricing_scheme/fixed_price' => [
-            'currency_code' => 'USD',
-            'value' => 60.00
-        ],
-        'plan/payment_preferences/auto_bill_outstanding' => 'true',
-        'plan/payment_preferences/payment_failure_threshold' => 1,
-        'plan/taxes/percentage' => 10
-    ]);
+//    $result = $paypal->SubscriptionUpdate('I-FFV9L1EEFHCH', [
+//        'plan/billing_cycles/@sequence==1/pricing_scheme/fixed_price' => [
+//            'currency_code' => 'USD',
+//            'value' => 60.00
+//        ],
+//        'plan/payment_preferences/auto_bill_outstanding' => 'true',
+//        'plan/payment_preferences/payment_failure_threshold' => 1,
+//        'plan/taxes/percentage' => 10
+//    ]);
     dd($result);
 } catch (\Exception $exception) {
     dd($exception->getMessage());

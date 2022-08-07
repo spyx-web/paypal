@@ -12,8 +12,8 @@ class ProductTest extends TestCase
     {
         $paypal = new Paypal("client_id", "client_key", "dev");
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid offset limit");
-        $paypal->ProductList("1", "20");
+        $this->expectExceptionMessage("Invalid offset or limit null");
+        $paypal->ProductList("1", "");
         $this->fail('Failed to assert ProductList throw exception with invalid argument.');
     }
 

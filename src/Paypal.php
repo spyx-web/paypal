@@ -64,7 +64,9 @@ class Paypal implements PaypalInterface
 
     public function ProductList($offset, $limit)
     {
-        if (!is_numeric($offset) || !is_numeric($limit)) throw new InvalidArgumentException("Invalid offset limit");
+        if (empty($offset) || empty($limit)) {
+            throw new InvalidArgumentException("Invalid offset or limit null");
+        }
         try {
             $product = new ProductList();
             $product->setParams([
