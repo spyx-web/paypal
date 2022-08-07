@@ -1,7 +1,7 @@
 # Paypal payment SDk
 
 ### [get Test Account](https://developer.paypal.com/)
-
+### [计划列表](https://www.sandbox.paypal.com/billing/plans)
 ### PaypalClient
 
 ```php
@@ -60,7 +60,7 @@ try {
 
 ### curl
 ```bash 
-    curl -v -X POST https://api-m.sandbox.paypal.com/v1/catalogs/products \
+curl -v -X POST https://api-m.sandbox.paypal.com/v1/catalogs/products \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer A21AAI0TrH4qXqMqJkh90rCe3OVpSG6YtdCepYz3ACNjgdf6wjJc5tQO5bvqoI8u936HeiINEkUKuYUdJEpZOGewVPwWtTpwQ" \
 -H "PayPal-Request-Id: PRODUCT-18062020-001" \
@@ -77,7 +77,36 @@ try {
 ### 打印测试结果
 
 ```bash
- 
-    ./vendor/bin/phpunit --colors=always  tests/ProductTest.php
+./vendor/bin/phpunit --colors=always  tests/ProductTest.php
+```
 
+```bash 
+curl -v -X PATCH https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-47XX49DWVE2W \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer A21AAKgHishv7PXnswOcIjUpue-wo0TZVD0B2Gvq_X3dkMVuGWYjbhF82SyEJmnZt4sJzT7t4jj7uvsh0tYN5AuKmSzJL4H1A" \
+-d '[
+  {
+    "op": "replace",
+    "path": "/plan/billing_cycles/@sequence==1/pricing_scheme/fixed_price",
+    "value": {
+      "currency_code": "USD",
+      "value": "50.00"
+    }
+  },
+  {
+    "op": "replace",
+    "path": "/plan/payment_preferences/auto_bill_outstanding",
+    "value": true
+  },
+  {
+    "op": "replace",
+    "path": "/plan/payment_preferences/payment_failure_threshold",
+    "value": 1
+  },
+  {
+    "op": "replace",
+    "path": "/plan/taxes/percentage",
+    "value": "10"
+  }
+]'
 ```

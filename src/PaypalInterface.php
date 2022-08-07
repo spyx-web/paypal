@@ -14,17 +14,21 @@ interface PaypalInterface
 
     public function PlansList($product_id, $page, $limit, $total_required = true);
 
-    public function PlansCreate($product_id, array $data);
+    public function PlansCreate($data);
 
     public function PlansUpdate($plan_id, $data);
 
-    public function PlansUpdatePrice($plan_id, array $data);
+    public function PlansPrice($plan_id, array $data);
 
     public function PlansDetail($plan_id);
 
-    public function SubscriptionList($plan_id, $start_time, $end_time);
+    public function PlansActivate($plan_id);
 
-    public function SubscriptionCreate($plan_id, array $data);
+    public function PlansDeactivate($plan_id);
+
+    public function SubscriptionList($subscription_id, $start_time, $end_time);
+
+    public function SubscriptionCreate($data);
 
     public function SubscriptionUpdate($subscription_id, array $data);
 
@@ -38,4 +42,5 @@ interface PaypalInterface
 
     public function SubscriptionSuspend($subscription_id, array $data);
 
+    public function SubscriptionCancel($subscription_id, array $data);
 }
