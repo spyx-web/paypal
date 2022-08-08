@@ -1,113 +1,127 @@
 # Paypal payment SDk
 
-### [get Test Account](https://developer.paypal.com/)
-### [计划列表](https://www.sandbox.paypal.com/billing/plans)
-### PaypalClient
+#### Installation
 
-```php
- $client = new PaypalClient('client_id', 'client_key');
-```
+You can add this library as a local, per-project dependency to your project using Composer:
 
-### [Product list](https://developer.paypal.com/docs/api/catalog-products/v1/#products_list)
-
-```php
-try {
-    $product = new ProductList();
-    $product->setParams([
-        'headers' => [
-            'Authorization' => 'Bearer ' . $client->getAccessToken(),
-            'Content-Type' => 'application/json'
-        ],
-        'query' => [
-            'page_size' => '20',
-            'page' => '1',
-            'total_required' => 'true'
-        ],
-    ]);
-    $result = $client->execute($product)->getBody()->getContents();
-    dd($result);
-} catch (\Exception $exception) {
-    dd($exception->getMessage());
-}
-```
-
-### [product create](https://developer.paypal.com/docs/api/catalog-products/v1/#products_create)
-
-```php
-try {
-    $product = new ProductCreate();
-    $product->setParams([
-        'headers' => [
-            'Authorization' => 'Bearer ' . $client->getAccessToken(),
-            'Content-Type' => 'application/json',
-            'PayPal-Request-Id' => 'PRODUCT-18062020-001'
-        ],
-        'json' => [
-            'name' => 'Video Streaming Service',
-            'description' => 'Video streaming service',
-            'type' => 'SERVICE',
-            'category' => 'SOFTWARE',
-            'image_url' => 'https://example.com/streaming.jpg',
-            'home_url' => 'https://example.com/home'
-        ],
-    ]);
-    $result = $client->execute($product)->getBody()->getContents();
-    dd($result);
-} catch (\Exception $exception) {
-    dd($exception->getMessage());
-}
-```
-
-### curl
 ```bash 
-curl -v -X POST https://api-m.sandbox.paypal.com/v1/catalogs/products \
--H "Content-Type: application/json" \
--H "Authorization: Bearer A21AAI0TrH4qXqMqJkh90rCe3OVpSG6YtdCepYz3ACNjgdf6wjJc5tQO5bvqoI8u936HeiINEkUKuYUdJEpZOGewVPwWtTpwQ" \
--H "PayPal-Request-Id: PRODUCT-18062020-001" \
--d '{
-  "name": "Video Streaming Service",
-  "description": "Video streaming service",
-  "type": "SERVICE",
-  "category": "SOFTWARE",
-  "image_url": "https://example.com/streaming.jpg",
-  "home_url": "https://example.com/home"
-}'
+composer require szwtdl/paypal
 ```
 
-### 打印测试结果
+#### paypal
+
+```bash 
+use Szwtdl\Paypal\Paypal
+
+$paypal = new Paypal('client_id','client_key','dev')
+
+```
+
+#### laravel
+
+在刚刚创建的应用里，我们需要更新一下配置文件 `config/services.php`，添加以下部分：
+
+config/services.php
+
+```bash 
+
+'paypal' => [
+    'client_id' => '',
+    'client_key' => '',
+    'mode' => 'prod',
+]
+
+```
+
+#### [ProductCreate](https://developer.paypal.com/docs/api/catalog-products/v1/#products_create)
+
+```bash 
+$paypal->ProductCreate("每天订购", "每天sand", 'SERVICE', 'SOFTWARE', 'https://example.com/streaming.jpg', 'https://example.com/home');
+```
+
+#### [ProductList](https://developer.paypal.com/docs/api/catalog-products/v1/#products_list)
+
+```bash 
+$paypal->ProductList(1,20)
+```
+
+#### [ProductDetail](https://developer.paypal.com/docs/api/catalog-products/v1/#products_get)
+```bash 
+$paypal->ProductDetail("PROD-8RU94658131561729")
+```
+
+#### [ProductUpdate](https://developer.paypal.com/docs/api/catalog-products/v1/#products_patch)
+```bash
+$paypal->ProductUpdate("PROD-8RU94658131561729", [
+    'description' => 'xxx'
+]);
+```
+
+#### [PlansList](https://developer.paypal.com/docs/api/subscriptions/v1/#plans_list)
+
+```bash 
+$paypal->PlansList('PROD-8RU94658131561729', 1, 10, true);
+```
+
+#### [PlansCreate](https://developer.paypal.com/docs/api/subscriptions/v1/#plans_create)
+
+```bash 
+$paypal->PlansCreate([
+    'product_id' => 'PROD-8RU94658131561729',
+    'name' => '优酷年会员',
+    'description' => '定期续费',
+    'status' => 'ACTIVE',
+    'billing_cycles' => [
+        [
+            'frequency' => [
+                'interval_unit' => 'MONTH',
+                'interval_count' => 3
+            ],
+            'tenure_type' => 'REGULAR',
+            'sequence' => 1,
+            'total_cycles' => 0,
+            'pricing_scheme' => [
+                'fixed_price' => [
+                    'value' => 20.99,
+                    'currency_code' => 'USD'
+                ]
+            ]
+        ]
+    ],
+    'payment_preferences' => [
+        'auto_bill_outstanding' => true,
+        'setup_fee' => [
+            'value' => 0,
+            'currency_code' => 'USD'
+        ],
+        'setup_fee_failure_action' => 'CONTINUE',
+        'payment_failure_threshold' => 3
+    ],
+    'taxes' => [
+        'percentage' => 0,
+        'inclusive' => false
+    ]
+]);
+```
+
+#### [PlansUpdate](https://developer.paypal.com/docs/api/subscriptions/v1/#plans_patch)
 
 ```bash
-./vendor/bin/phpunit --colors=always  tests/ProductTest.php
+$paypal->PlansUpdate("P-0BL89979RT255525KMLQP5AA", [
+    'description' => '新产品'
+]);
 ```
 
-```bash 
-curl -v -X PATCH https://api-m.sandbox.paypal.com/v1/billing/subscriptions/I-47XX49DWVE2W \
--H "Content-Type: application/json" \
--H "Authorization: Bearer A21AAKgHishv7PXnswOcIjUpue-wo0TZVD0B2Gvq_X3dkMVuGWYjbhF82SyEJmnZt4sJzT7t4jj7uvsh0tYN5AuKmSzJL4H1A" \
--d '[
-  {
-    "op": "replace",
-    "path": "/plan/billing_cycles/@sequence==1/pricing_scheme/fixed_price",
-    "value": {
-      "currency_code": "USD",
-      "value": "50.00"
-    }
-  },
-  {
-    "op": "replace",
-    "path": "/plan/payment_preferences/auto_bill_outstanding",
-    "value": true
-  },
-  {
-    "op": "replace",
-    "path": "/plan/payment_preferences/payment_failure_threshold",
-    "value": 1
-  },
-  {
-    "op": "replace",
-    "path": "/plan/taxes/percentage",
-    "value": "10"
-  }
-]'
-```
-composer config repositories.paypal path ../paypal
+#### [PlansDetail]()
+
+#### [PlansActivate]()
+
+#### [PlansDeactivate]()
+
+#### [SubscriptionCreate]()
+
+#### [SubscriptionList]()
+
+#### [SubscriptionDetail]()
+
+#### [SubscriptionActivate]()
