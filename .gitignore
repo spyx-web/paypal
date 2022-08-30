@@ -1,5 +1,6 @@
 .idea/
 vendor/
+demo.php
 http-client.env.json
 paypal.http
 composer.lock

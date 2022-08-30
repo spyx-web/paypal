@@ -9,7 +9,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         $this->app->singleton(Paypal::class, function () {
-            //client_id, $client_key, $mode = 'prod'
             return new Paypal(config('services.paypal.client_id'), config('services.paypal.client_key'), config('services.paypal.mode'));
         });
 
